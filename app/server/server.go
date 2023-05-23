@@ -49,7 +49,12 @@ func createGoly(ctx *fiber.Ctx) error {
 	}
 
 	if goly.Random {
-		goly.Goly = utils.RandomURL(8)
+		goly.Goly, err = utils.NanoId(16)
+		if err != nil {
+			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "InternalServerError",
+			})
+		}
 	}
 	err = model.CreateGoly(goly)
 	if err != nil {
